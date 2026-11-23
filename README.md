@@ -1,97 +1,37 @@
-# LABFIS — Plantilla base para ocho equipos
+# LABFIS · Grupo 5 · Reporte Anónimo de Daños
 
-Aplicación React/Vite con estilo común y navegación a ocho módulos, un ejemplo docente **funcional** de solicitudes de impresión 3D y conexión a PostgreSQL mediante Supabase Auth y RLS.
+**SIGELAB** — Sistema Integral de Gestión de Servicios de LABFIS
+**Materia:** Ingeniería de Software II · EPN
+**Fecha de entrega:** 23 de noviembre de 2026
 
-## Qué está implementado y qué no
+## Integrantes del equipo
+- Adrián Correa
+- Freddy Jiménez
+- Josué Mantuano
 
-- ✅ Portada + menú de los 8 módulos LABFIS.
-- ✅ Ejemplo docente de impresión 3D: insertar y consultar solicitudes en **PostgreSQL** una vez configurado Supabase.
-- ✅ Formulario de registro e ingreso de usuarios por correo/contraseña; la confirmación de correo depende de configuración de Supabase.
-- ✅ Políticas RLS que aíslan los registros de cada cuenta.
-- ⏳ Los 8 módulos tienen **plantillas de trabajo**, no funcionalidades finales ni tablas propias todavía.
-- ⏳ Integración multiusuario por equipos, permisos de personal LABFIS y despliegue: no incluidos.
+## Descripción del Módulo
+Este módulo permite a estudiantes y docentes de la Facultad de Ingeniería de Sistemas reportar daños en equipos e instalaciones de los laboratorios (LABFIS) de forma **100% anónima**, sin necesidad de iniciar sesión. A cambio, el sistema genera un **código único de seguimiento** que permite al usuario consultar el estado de su reporte posteriormente (Registrado, En Proceso o Atendido).
 
-## Ruta rápida A: StackBlitz (sin instalaciones)
+## Stack Tecnológico
+- **Frontend:** React 18 + Vite + Tailwind CSS
+- **Backend / Base de Datos:** Supabase (PostgreSQL 15)
+- **Control de versiones:** GitHub
+- **Despliegue:** Vercel
+- **Herramientas Ágiles:** JIRA (Backlog) y TestRail (Casos de prueba)
 
-1. Descomprime el ZIP y sube la carpeta **labfis-base** a un repositorio de GitHub. No incluyas `.env.local`.
-2. Abre `https://stackblitz.com/github/USUARIO/REPOSITORIO` (reemplaza con tu URL). Si tu repositorio es privado, usa el flujo de importación privada de StackBlitz según tu plan.
-3. Deja que StackBlitz instale dependencias y ejecute el proyecto. Si es necesario, ejecuta `npm run dev`.
-4. Deberías ver la portada y los ocho módulos, aun sin Supabase.
-5. Configura Supabase según el bloque siguiente. En StackBlitz define las variables de entorno desde su editor o configuración.
+## Historias de Usuario Implementadas
+| Código | Título | Prioridad | Estado |
+| :--- | :--- | :--- | :--- |
+| **HU-01** | Reportar daño de forma anónima | Alta | Implementado |
+| **HU-02** | Identificar laboratorio y recurso afectado | Alta | Implementado |
+| **HU-03** | Describir problema y adjuntar evidencias | Alta | Implementado |
+| **HU-04** | Recibir código de seguimiento | Media | Implementado |
+| **HU-05** | Consultar estado de un reporte | Media | Implementado |
+| **HU-06** | Indicar urgencia percibida | Baja | Integrado en HU-01 |
 
-## Ruta rápida B: desarrollo local
+## Ejecución Local
+Para correr este proyecto en tu computadora, sigue estos pasos:
 
-Requisitos: Node.js compatible con Vite y npm.
-
-```bash
-npm install
-cp .env.example .env.local    # En Windows: copia el archivo manualmente
-npm run dev
-```
-
-Abre la URL local que indique Vite (habitualmente `http://localhost:5173`).
-
-## Conectar PostgreSQL en Supabase (docente o responsable del entorno)
-
-1. Entra a https://supabase.com/ y crea un **proyecto de pruebas**.
-2. Abre **SQL Editor** y ejecuta `supabase/01_base_demo.sql`.
-3. En **Project Connect / API**, localiza el **Project URL** y la **Publishable key**.
-4. Define las variables de entorno:
-
-```env
-VITE_SUPABASE_URL=https://TU-PROYECTO.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=TU_CLAVE_PUBLICABLE
-```
-
-5. Reinicia el servidor si corresponde.
-6. Registra una cuenta con correo y contraseña en la aplicación. Si se exige confirmación por correo, confirma antes de iniciar sesión.
-7. Ve a **Impresión 3D**. Registra una solicitud y comprueba que aparece en el listado.
-8. Abre Supabase **Table Editor → printing_requests** para comprobar que se almacenó en PostgreSQL. Recarga la página y verifica que permanece.
-
-**Seguridad**: la clave publicable se usa en el cliente con RLS; nunca pegues `service_role`, `sb_secret_*`, contraseñas de BD ni JWT privados en variables `VITE_*`.
-
-## Con qué trabaja cada equipo
-
-| Equipo | Módulo | ID en menú |
-|---|---|---|
-| 1 | Objetos perdidos | `objetos` |
-| 2 | Préstamo de equipos | `prestamos` |
-| 3 | Reporte de daños | `danos` |
-| 4 | Llaves y accesos | `accesos` |
-| 5 | Reservas | `reservas` |
-| 6 | Apertura y cierre | `apertura` |
-| 7 | Inventario QR | `inventario` |
-| 8 | Dashboard | `dashboard` |
-
-Para crear un módulo real, **crea un archivo de componente propio** (por ejemplo `src/modules/ObjetosPerdidos.jsx`) y cambia el renderizado condicional en `src/App.jsx`. No alteres módulos de otros equipos. Utiliza el ejemplo de impresión 3D como referencia para conectar con Supabase.
-
-## HU del ejemplo docente
-
-Como estudiante quiero registrar una solicitud de impresión 3D, indicando descripción, material y cantidad, para gestionar su fabricación.
-
-- CA01: Descripción obligatoria.
-- CA02: Cantidad válida, mínimo 1.
-- CA03: Registro visible tras guardar y recargar.
-- CA04: Estado inicial **Pendiente**.
-
-## Archivos más importantes
-
-- `src/App.jsx`: estructura y menú global.
-- `src/modules/config.js`: nombres, resúmenes e identificación de módulos.
-- `src/modules/PrintingDemo.jsx`: ejemplo con formulario, validación y consultas SQL vía Supabase.
-- `src/modules/StudentModule.jsx`: plantilla vacía para equipos.
-- `src/lib/supabase.js`: configuración segura del cliente público.
-- `supabase/01_base_demo.sql`: tabla de ejemplo, restricciones y RLS.
-- `docs/GUIA_DOCENTE.md`: guion de laboratorio.
-- `docs/PROMPT_EQUIPOS.md`: prompt estandarizado de IA.
-
-## Entrega mínima de un equipo
-
-1. HU y CA implementados y trazables.
-2. Pantalla(s) de React navegables.
-3. Tabla propia PostgreSQL y reglas RLS.
-4. Guardar + consultar desde el navegador, con recarga.
-5. Al menos dos pruebas manuales con evidencia.
-6. Código en repositorio sin credenciales privadas.
-
-> Este proyecto es un punto de partida académico. Los módulos están vacíos intencionalmente: deben construirse, probarse e integrarse. No usar con información institucional real.
+1. Instalar dependencias:
+   ```bash
+   npm install
